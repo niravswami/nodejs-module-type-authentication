@@ -39,15 +39,6 @@ app.get("/about", (req, res) => {
 	res.render("index", { name: "Nirav" });
 });
 
-app.post(generateApiUrlV1("inter"), (req, res) => {
-	console.log(req.cookies, req.headers);
-	res.status(200).json({
-		...req.body,
-		c: JSON.stringify(req.cookies),
-		h: JSON.stringify(req.headers),
-	});
-});
-
 app.post("/about", async (req, res) => {
 	console.log("req", req.body);
 	const user = await User.create({
