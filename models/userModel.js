@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import util from "util";
+const hashAsync = util.promisify(bcrypt.hash);
 
 const userSchema = mongoose.Schema(
 	{
@@ -36,9 +38,14 @@ const userSchema = mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
-	console.log("save", this);
+	console.log(
+		"save",
+		this,
+		'this.isModified("password")',
+		this.isModified("password")
+	);
 	if (!this.isModified("password")) return next();
-	this.password = bcrypt.hash(this.password, 12);
+	this.password = await hashAsync(this.password, 12);
 	next();
 });
 
